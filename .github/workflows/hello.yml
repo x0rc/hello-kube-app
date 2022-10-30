@@ -42,4 +42,4 @@ jobs:
         notification_title: "Starting Build AAA"
         notify_when: "failure, success, warning"
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
