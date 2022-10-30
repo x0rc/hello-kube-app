@@ -43,7 +43,7 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        input: '.'
+        input: 'trivy-results.sarif'
         ignore-unfixed: true
         format: json
         output: 'results.json'
