@@ -5,7 +5,7 @@ on:
   push:
 
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'   # “At 00:00.”
 
 jobs:
 
@@ -24,7 +24,7 @@ jobs:
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./hello-kube-app1
-        curl -L https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.tar.gz | tar xvzf - contrib trivy
+        curl -L https://github.com/aquasecurity/trivy/releases/download/v0.33.0/trivy_0.33.0_Linux-64bit.tar.gz | tar xvzf - contrib trivy
         chmod 755 trivy
         mv trivy /usr/local/bin/trivy
         trivy image --format template --template "@contrib/sarif.tpl" --output trivy-results.sarif $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
