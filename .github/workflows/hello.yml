@@ -90,8 +90,8 @@ jobs:
           curl -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
           --request POST \
-          --data '{"event_type": "update-book-ui-service-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
-          https://api.github.com/repos/abvijaykumar/book-library-kube-infra/dispatches 
+          --data '{"event_type": "update-hello-kubernetes-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \                                  ░▒▓ INT х  19:32:16 ▓▒░
+          https://api.github.com/repos/x0rc/hello-kube-app/dispatches
 
     - name: Invoked Infra Workflow Slack Notification
       uses: ravsamhq/notify-slack-action@v2
