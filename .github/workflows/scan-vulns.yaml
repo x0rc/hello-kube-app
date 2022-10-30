@@ -29,6 +29,6 @@ jobs:
           mv trivy /usr/local/bin/trivy
           trivy image --format template --template "@contrib/sarif.tpl" --output trivy-results.sarif hello-kube:latest
       - name: Upload container results to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: trivy-results.sarif
