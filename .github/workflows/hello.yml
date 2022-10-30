@@ -33,15 +33,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Build Status Slack Notification
+    - name: Starting Build & Push  Status Slack Notification
       uses: ravsamhq/notify-slack-action@v2
       if: always()
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GHTOKEN }}
-        notification_title: "Starting the BozoBookLibrary UI ReactJS Build: {status_message}"
+        notification_title: "Starting Build {BUILD_NUMBER}"
         message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
         notify_when: "failure, success, warning"
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WH_URL }}
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
