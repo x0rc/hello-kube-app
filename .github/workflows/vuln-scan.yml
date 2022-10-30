@@ -53,10 +53,3 @@ jobs:
           summary="0 Issues"
         fi
         echo "SUMMARY=$summary" >> $GITHUB_ENV
-    - name: Send Slack Notification
-      uses: slackapi/slack-github-action@v1.15.0
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.WEBHOOK }}
-      with:
-        channel-id: C0492H3DVB3
-        slack-message: "Trivy Scan Summary is: ${{ env.SUMMARY }} "
