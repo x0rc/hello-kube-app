@@ -1,11 +1,15 @@
 
-# This workflow will build a docker container, publish it to IBM Container Registry, and deploy it to IKS when a release is created
+# This workflow will build a docker container, publish it to ECR Container Registry, 
+# and deploy it to the k8s cluster when a release is created.
 #
 # To configure this workflow:
 #
 # 1. Ensure that your repository contains a Dockerfile
-# 2. Setup secrets in your repository by going to settings: Create ICR_NAMESPACE and IBM_CLOUD_API_KEY
-# 3. Change the values for the IBM_CLOUD_REGION, REGISTRY_HOSTNAME, IMAGE_NAME, IKS_CLUSTER, DEPLOYMENT_NAME, and PORT
+# 2. Create secrets in your repository:
+# GHTOKEN
+# WEBHOOK (slack webhook)
+# AWS_ACCESS_KEY_ID
+# AWS_SECRET_ACCESS_KEY
 
 name: Hello k8s App
 
@@ -17,7 +21,7 @@ on:
       - 'hello-kube-app1/**'
   workflow_dispatch:
     name:
-      description: 'Test scenario tags' 
+      description: 'Any modification in ./hello-kube-app1' 
 
 jobs:
   setup-build-publish-deploy:
@@ -35,7 +39,7 @@ jobs:
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GHTOKEN }}
-        notification_title: "Starting to Build Kube-Hello"
+        notification_title: "Starting to Build hello-kubernetes"
         notify_when: "failure, success, warning"
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
@@ -43,7 +47,7 @@ jobs:
     - name: Generate build number
       uses: einaregilsson/build-number@v3
       with:
-        token: ${{ secrets.GHTOKENCLASSIC }}  
+        token: ${{ secrets.GHTOKEN }}  
 
     - name: Print new build number
       run: echo "Build number is $BUILD_NUMBER"
@@ -81,4 +85,23 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
 
-        
+    - name: Invoke Hello-Kubernetes Infra GitOps pipe
+      run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
+          --request POST \
+          --data '{"event_type": "update-book-ui-service-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
+          https://api.github.com/repos/abvijaykumar/book-library-kube-infra/dispatches 
+
+    - name: Invoked Infra Workflow Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GHTOKEN }}
+        notification_title: "Infra Workflow trigger Status: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
