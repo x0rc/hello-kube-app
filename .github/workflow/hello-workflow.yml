@@ -1,0 +1,47 @@
+
+# This workflow will build a docker container, publish it to IBM Container Registry, and deploy it to IKS when a release is created
+#
+# To configure this workflow:
+#
+# 1. Ensure that your repository contains a Dockerfile
+# 2. Setup secrets in your repository by going to settings: Create ICR_NAMESPACE and IBM_CLOUD_API_KEY
+# 3. Change the values for the IBM_CLOUD_REGION, REGISTRY_HOSTNAME, IMAGE_NAME, IKS_CLUSTER, DEPLOYMENT_NAME, and PORT
+
+name: UI Book Library Service
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - 'hello-kube-app/**'
+  workflow_dispatch:
+    name:
+      description: 'Test scenario tags' 
+
+env:
+  REGISTRY_HOSTNAME: docker.io
+  IMAGE_NAME: hello-kube-app
+
+jobs:
+  setup-build-publish-deploy:
+    name: Development Build & Deploy Hello-Kube
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build Status Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GHTOKEN }}
+        notification_title: "Starting the BozoBookLibrary UI ReactJS Build: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
