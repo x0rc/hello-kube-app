@@ -20,7 +20,7 @@ jobs:
           
       - name: Build image
         run: | 
-          docker build -t hello-kube:latest ./hello-kube-app1/Dockerfile
+          docker build -t hello-kube:latest ./hello-kube-app1/
             
       - name: Run Trivy vulnerability scanner
         run: |
