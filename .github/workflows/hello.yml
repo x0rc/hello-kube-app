@@ -64,12 +64,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: hello-kube
+        IMAGE_TAG: 5
       run: |
-        echo "REG: $ECR_REGISTRY"
-        echo "REPO: $ECR_REPOSITORY"
-        cd hello-kube-app1
-        ls -la
-        echo "Before Docker Build"
-        docker build -f Dockerfile -t hello
-        echo "After Docker Build"
-        docker images
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./hello-kube-app1/
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
