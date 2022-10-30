@@ -7,7 +7,7 @@
 # 2. Setup secrets in your repository by going to settings: Create ICR_NAMESPACE and IBM_CLOUD_API_KEY
 # 3. Change the values for the IBM_CLOUD_REGION, REGISTRY_HOSTNAME, IMAGE_NAME, IKS_CLUSTER, DEPLOYMENT_NAME, and PORT
 
-name: UI Book Library Service
+name: Hello k8s App
 
 on: 
   push:
@@ -18,10 +18,6 @@ on:
   workflow_dispatch:
     name:
       description: 'Test scenario tags' 
-
-env:
-  REGISTRY_HOSTNAME: docker.io
-  IMAGE_NAME: hello-kube-app
 
 jobs:
   setup-build-publish-deploy:
@@ -39,7 +35,40 @@ jobs:
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GHTOKEN }}
-        notification_title: "Starting Build AAA"
+        notification_title: "Starting Build Kube-Hello"
         notify_when: "failure, success, warning"
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
+
+    - name: Generate build number
+      uses: einaregilsson/build-number@v3
+      with:
+        token: ${{secrets.github_token}}        
+
+    - name: Print new build number
+      run: echo "Build number is $BUILD_NUMBER"
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # Build the Docker image
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: hello-kube
+        IMAGE_TAG: $BUILD_NUMBER
+      run: |
+        cd hello-kube-app1
+        ls -la
+        echo "Before Docker Build"
+        docker build -f Dockerfile -t $IMAGE_NAME:$IMAGE_TAG .
+        echo "After Docker Build"
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
