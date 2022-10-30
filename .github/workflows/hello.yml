@@ -44,4 +44,4 @@ jobs:
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
         notify_when: "failure, success, warning"
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WH_URL }}
