@@ -14,7 +14,7 @@ on:
     branches:
       - main
     paths:
-      - 'hello-kube-app/**'
+      - 'hello-kube-app1/**'
   workflow_dispatch:
     name:
       description: 'Test scenario tags' 
