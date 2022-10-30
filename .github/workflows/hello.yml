@@ -68,5 +68,6 @@ jobs:
         cd hello-kube-app1
         ls -la
         echo "Before Docker Build"
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:v$BUILD_NUMBER .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:v$BUILD_NUMBER
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER .
+        echo "After Docker Build"
+        docker images
