@@ -70,6 +70,6 @@ jobs:
         cd hello-kube-app1
         ls -la
         echo "Before Docker Build"
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER .
+        docker build -f Dockerfile -t hello
         echo "After Docker Build"
         docker images
