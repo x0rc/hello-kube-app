@@ -35,7 +35,7 @@ jobs:
       with:
         status: ${{ job.status }}
         token: ${{ secrets.GHTOKEN }}
-        notification_title: "Starting Build Kube-Hello"
+        notification_title: "Starting to Build Kube-Hello"
         notify_when: "failure, success, warning"
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
@@ -64,7 +64,21 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: hello-kube
-        IMAGE_TAG: 5
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./hello-kube-app1
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER ./hello-kube-app1
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER
+
+    - name: Starting Build & Push  Status Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GHTOKEN }}
+        notification_title: "Docker Build & Push Status: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.WEBHOOK }}
+
+        
