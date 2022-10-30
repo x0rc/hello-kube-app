@@ -20,15 +20,14 @@ jobs:
           
       - name: Build image
         run: | 
-          docker build --tag "hello-kube:latest" \
-            --file hello-kube-app-1/Dockerfile
+          docker build -t hello-kube:latest ./hello-kube-app1/Dockerfile
             
       - name: Run Trivy vulnerability scanner
         run: |
           curl -L https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.tar.gz | tar xvzf - contrib trivy
           chmod 755 trivy
           mv trivy /usr/local/bin/trivy
-          trivy image --format template --template "@contrib/sarif.tpl" --output trivy-results.sarif $IMAGE:$IMAGE_VERSION
+          trivy image --format template --template "@contrib/sarif.tpl" --output trivy-results.sarif hello-kube:latest
       - name: Upload container results to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
         with:
