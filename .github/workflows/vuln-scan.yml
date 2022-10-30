@@ -34,7 +34,7 @@ jobs:
         ECR_REPOSITORY: hello-kube
         IMAGE_TAG: 21
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./src
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./hello-kube-app1
         curl -L https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.tar.gz | tar xvzf - contrib trivy
         chmod 755 trivy
         mv trivy /usr/local/bin/trivy
