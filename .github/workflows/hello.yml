@@ -88,7 +88,7 @@ jobs:
     - name: Invoke Hello-Kubernetes Infra GitOps pipe
       run: |
           curl -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
+          -H "Authorization: token ${{ secrets.GHTOKEN }}" \
           --request POST \
           --data '{"event_type": "update-hello-kubernetes-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
           https://api.github.com/repos/x0rc/hello-kube-infra/dispatches
