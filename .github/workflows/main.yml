@@ -1,0 +1,16 @@
+name: Trivy CVE Dependency Scanner
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  trivy-scan:
+    uses: vmware-tanzu/carvel-release-scripts/.github/workflows/trivy-scan.yml@main
+    with:
+      repo: x0rc/hello-kube-app
+      tool: kapp
+      goVersion: 1.18
+    secrets:
+      githubToken: ${{ secrets.GHTOKEN }}
+      slackWebhookURL: ${{ secrets.WEBHOOK }}
