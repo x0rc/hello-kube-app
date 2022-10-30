@@ -91,7 +91,7 @@ jobs:
           -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
           --request POST \
           --data '{"event_type": "update-hello-kubernetes-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \                                  ░▒▓ INT х  19:32:16 ▓▒░
-          https://api.github.com/repos/x0rc/hello-kube-app/dispatches
+          https://api.github.com/repos/x0rc/hello-kube-infra/dispatches
 
     - name: Invoked Infra Workflow Slack Notification
       uses: ravsamhq/notify-slack-action@v2
