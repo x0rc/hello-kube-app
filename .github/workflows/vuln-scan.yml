@@ -41,6 +41,6 @@ jobs:
 
     - name: Trivy Scan
       id: trivy
-      uses: ebot7/trivy-scan-pipeline@main
+      uses: ebot7/trivy-scan-pipeline@master
       with:
         IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
