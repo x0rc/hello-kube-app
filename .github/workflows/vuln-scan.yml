@@ -16,11 +16,6 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16.0
   
     - name: Run Trivy vulnerability scanner
       env:
@@ -38,11 +33,3 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: trivy-results.sarif
-
-    - name: Trivy Scan
-      id: trivy
-      uses: x0rc/trivy-scan-pipeline@master
-      with:
-        IMAGE: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        NOTIFICATION_TYPES: 'slack'
-        SLACK_WEBHOOK_URL: "${{ secrets.WEBHOOK }}"
